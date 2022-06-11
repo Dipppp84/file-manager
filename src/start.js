@@ -1,6 +1,5 @@
 //npm run start -- --username=your_username
-import {CommandHandler} from "./commandHandler.js";
-//import {exitManager} from "./exitManager.js";
+import {CommandHandler} from "./command-handler.js";
 
 if (process.argv[2].startsWith('--username')) {
     global.myOptions = {
@@ -11,7 +10,6 @@ if (process.argv[2].startsWith('--username')) {
     console.log(`You are currently in ${global.myOptions.currentlyPath}`);
 } else throw new Error('Error argument');
 
-let commandHandler = new CommandHandler();
-
+const commandHandler = new CommandHandler();
 process.stdin.pipe(commandHandler);
 

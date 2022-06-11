@@ -1,6 +1,10 @@
 import {Writable} from "stream";
-import {exitManager} from "./utils/exitManager.js";
+import {exitManager} from "./utils/exit-manager.js";
 import * as fileOperations from "./utils/operations-with-files.js"
+import {handlerOS} from "./utils/operating-system-info.js";
+import {calculateHash} from "./utils/hash-calculation.js";
+import {compress, decompress} from "./utils/zip.js";
+
 
 export class CommandHandler extends Writable {
     constructor() {
@@ -9,7 +13,7 @@ export class CommandHandler extends Writable {
 
     async _write(chunk, encoding, callback) {
         try {
-            let answer = await this.handler(chunk.toString().trimEnd());
+            const answer = await this.handler(chunk.toString().trimEnd());
             if (answer)
                 console.log(answer)
         } catch (err) {
@@ -42,25 +46,20 @@ export class CommandHandler extends Writable {
         } else if (command.startsWith('mv')) {
             await fileOperations.mv(command);
             return 'mv done';
-        }else if (command.startsWith('rm')) {
+        } else if (command.startsWith('rm')) {
             await fileOperations.rm(command);
             return 'rm done';
+        } else if (command.startsWith('os')) {
+            return handlerOS(command);
+        } else if (command.startsWith('hash')) {
+            return calculateHash(command);
+        } else if (command.startsWith('decompress')) {
+            await decompress(command);
+            return 'decompress done';
+        } else if (command.startsWith('compress')) {
+            await compress(command);
+            return 'compress done';
         } else
-            return 'Invalid input';
+            throw new Error('Invalid input');
     }
 }
-
-/*function getAbsolutePath(inPath) {
-    if (!inPath)
-        throw new Error('Operation failed');
-    if (inPath.startsWith('.'))
-        inPath = inPath.replace('.', process.env.USERPROFILE.toLowerCase())
-    else if (!path.isAbsolute(inPath))
-        inPath = path.join(global.myOptions.currentlyPath, inPath);
-    return inPath;
-}*/
-
-/*
-.then(value => value).catch(err => {
-    if (err) throw new Error('FS operation failed');
-})*/
