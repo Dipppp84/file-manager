@@ -39,7 +39,7 @@ npm run start -- --username=your\_username
 
   cd path\_to\_directory, cd ./
 
-    * Список всех файлов и папок в текущем каталоге или по пути директори
+    * Список всех файлов и папок в текущем каталоге или по пути директории
 
   ls, ls path\_to\_directory
 
